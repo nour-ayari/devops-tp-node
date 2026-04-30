@@ -8,26 +8,26 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/nour-ayari/devops-tp-node.git'
+                checkout scm
             }
         }
 
         stage('Build / Install') {
             steps {
-                bat 'npm install'
+                sh 'npm install'
             }
         }
 
         stage('Unit Tests') {
             steps {
-                bat 'npm test'
+                sh 'npm test'
             }
         }
 
         stage('Static Analysis - SonarQube') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    bat 'sonar-scanner'
+                    sh 'sonar-scanner'
                 }
             }
         }
