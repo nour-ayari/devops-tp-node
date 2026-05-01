@@ -86,9 +86,9 @@ stage('Configuration & Deploy - Ansible/Kubernetes') {
 stage('Smoke Test') {
     steps {
         sh '''
-        sleep 10
-        curl -f http://host.docker.internal:30080/health
-        '''
+URL=$(minikube service devops-tp-node-service --url)
+curl -f $URL/health
+'''
     }
 }
     }
