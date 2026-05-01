@@ -86,10 +86,19 @@ stage('Configuration & Deploy - Ansible/Kubernetes') {
 stage('Smoke Test') {
     steps {
         sh '''
-URL=$(minikube service devops-tp-node-service --url)
-curl -f $URL/health
-'''
+        kubectl get pods
+        kubectl get svc
+        kubectl rollout status deployment/devops-tp-node
+
+        kubectl port-forward svc/devops-tp-node-service 8081:3000 > port-forward.log 2>&1 &
+        PF_PID=$!
+
+        sleep 10
+
+        curl -f http://127.0.0.1:8081/health
+
+        kill $PF_PID
+        '''
     }
 }
-    }
 }
