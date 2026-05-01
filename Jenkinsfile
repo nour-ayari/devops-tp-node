@@ -68,5 +68,28 @@ pipeline {
                 }
             }
     }
+    stage('Infrastructure Provisioning - Terraform') {
+    steps {
+        dir('terraform') {
+            sh 'terraform init'
+            sh 'terraform apply -auto-approve'
+        }
+    }
+}
+
+stage('Configuration & Deploy - Ansible/Kubernetes') {
+    steps {
+        sh "ansible-playbook -i ansible/inventory.ini ansible/deploy.yml --extra-vars image_tag=${BUILD_NUMBER}"
+    }
+}
+
+stage('Smoke Test') {
+    steps {
+        sh '''
+        sleep 10
+        curl -f http://host.docker.internal:30080/health
+        '''
+    }
+}
     }
 }

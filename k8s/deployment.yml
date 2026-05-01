@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-tp-node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-tp-node
+  template:
+    metadata:
+      labels:
+        app: devops-tp-node
+    spec:
+      containers:
+        - name: devops-tp-node
+          image: nourayari/devops-tp-node:latest
+          ports:
+            - containerPort: 3000
